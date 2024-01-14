@@ -18,19 +18,11 @@ open class ArtworksAPI {
      - parameter skip: (query) Number of page 
      - parameter limit: (query) Limit of artworks by page 
      - parameter hasImage: (query) Filter to return only artworks that have a web image asset 
-     - parameter apiResponseQueue: The queue on which api response is dispatched.
-     - parameter completion: completion handler to receive the data and the error objects
+     - returns: ArtworksList
      */
-    @discardableResult
-    open class func everythingGet(skip: Int, limit: Int, hasImage: Int, apiResponseQueue: DispatchQueue = OpenAPIClientAPI.apiResponseQueue, completion: @escaping ((_ data: ArtworksList?, _ error: Error?) -> Void)) -> RequestTask {
-        return everythingGetWithRequestBuilder(skip: skip, limit: limit, hasImage: hasImage).execute(apiResponseQueue) { result in
-            switch result {
-            case let .success(response):
-                completion(response.body, nil)
-            case let .failure(error):
-                completion(nil, error)
-            }
-        }
+    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+    open class func everythingGet(skip: Int, limit: Int, hasImage: Int) async throws -> ArtworksList {
+        return try await everythingGetWithRequestBuilder(skip: skip, limit: limit, hasImage: hasImage).execute().body
     }
 
     /**
